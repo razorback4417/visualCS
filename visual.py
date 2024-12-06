@@ -1,148 +1,181 @@
 from manim import *
 
-class ArrayItem:
-    def __init__(self, value):
-        self.value = value
-        self.square = Square(side_length=1)
-        self.text = Integer(value)
-
-class Thumbnail(Scene):
+class MergeSortScene(Scene):
     def construct(self):
+        # Configuration
+        self.array = [3, 5, 4, 2, 6]
+        self.square_size = 0.7
+        self.square_spacing = 0.2
+        self.level_spacing = 1.5
+        self.split_spacing = 1.0
+        self.highlight_color = "#FFD700"  # Golden yellow for highlights
 
-        title = Title("Sorting algorithms 2:")
-        subtitle = Text("Selection sort", font_size=90)
+        # Track all elements at each level for merging animation
+        self.levels = {0: [], 1: [], 2: [], 3: []}
 
-        self.add(title)
-        self.add(subtitle)
+        # Initial setup
+        self.camera.background_color = "#2D3436"
+        title = Text("Merge Sort", color=WHITE).to_edge(UP, buff=0.5)
+        self.play(FadeIn(title))
 
-class Intro(Scene):
-    def construct(self):
+        # Create initial array at top
+        initial_group = self.create_array_group(self.array, 2.5)
+        self.levels[0].append((initial_group, 0, len(self.array)-1))
+        self.play(FadeIn(initial_group))
 
-        title = Text("Selection sort")
+        # Phase 1: Split arrays recursively (top-down)
+        self.split_phase(self.array, 0, len(self.array)-1, 0, 0)
+        self.wait(0.5)
 
-        self.play(Write(title))
-        self.wait(1)
-        self.play(Unwrite(title, reverse=False))
-
-class Sort(Scene):
-    def construct(self):
-        # initialize the array
-        data = [2,3,1,4,7,6,5,9,8]
-
-        # transform the array into ArrayItems
-        dArray = []
-        for el in data:
-            dArray.append(ArrayItem(el))
-
-        # create the VGroup for Manim rendering
-        gArray = VGroup()
-        # add the squares
-        for el in dArray:
-            gArray.add(VGroup().add_to_back(el.square).add(el.text))
-        # arrange them
-        gArray.arrange(buff=0)
-        # add the texts
-        #for el in range(len(dArray)):
-            #gArray.add(dArray[el].text.align_to(dArray[el].square))
-
-        self.play(Write(gArray, lag_ratio=0.1))
+        # Phase 2: Merge arrays (bottom-up)
+        self.merge_phase()
         self.wait(1)
 
-        # sort
-        for i in range(len(dArray)-1):
-            self.play(dArray[i].square.animate(run_time=0.3).set_fill(GREEN, opacity=0.3))
-            min_id = i
-            for j in range(i+1,len(dArray)):
-                self.play(dArray[j].square.animate(run_time=0.3).set_fill(BLUE, opacity=0.3))
-                if dArray[j].value < dArray[min_id].value:
-                    if min_id != i:
-                        self.play(AnimationGroup(dArray[j].square.animate(run_time=0.3).set_fill(GREEN, opacity=0.3),
-                                             dArray[min_id].square.animate(run_time=0.3).set_fill(GREEN, opacity=0)))
-                    else:
-                        self.play(dArray[j].square.animate(run_time=0.3).set_fill(GREEN, opacity=0.3))
-                    min_id = j
+    def create_square_number(self, number, position, highlighted=False):
+        square = Square(
+            side_length=self.square_size,
+            color=self.highlight_color if highlighted else BLUE,
+            fill_opacity=0.3
+        ).move_to(position)
+
+        number_text = Text(str(number), color=WHITE).scale(0.6)
+        number_text.move_to(square.get_center())
+
+        return VGroup(square, number_text)
+
+    def create_array_group(self, arr, y_pos, x_offset=0):
+        group = VGroup()
+        total_width = len(arr) * (self.square_size + self.square_spacing)
+        start_x = x_offset - total_width/2 + self.square_size/2
+
+        for i, num in enumerate(arr):
+            x_pos = start_x + i * (self.square_size + self.square_spacing)
+            position = [x_pos, y_pos, 0]
+            square_number = self.create_square_number(num, position)
+            group.add(square_number)
+
+        return group
+
+    def split_phase(self, arr, left, right, level, x_offset):
+        if left == right:
+            # Leaf node
+            element = self.create_array_group([arr[left]], 2.5 - level * self.level_spacing, x_offset)
+            self.levels[level].append((element, left, right))
+            self.play(FadeIn(element))
+            return
+
+        mid = (left + right) // 2
+        curr_arr = arr[left:right + 1]
+
+        # Create current level visualization
+        curr_group = self.create_array_group(curr_arr, 2.5 - level * self.level_spacing, x_offset)
+        self.levels[level].append((curr_group, left, right))
+
+        if level > 0:  # Don't animate for the initial array
+            self.play(FadeIn(curr_group))
+
+        # Calculate offsets for children
+        left_size = mid - left + 1
+        right_size = right - mid
+        left_offset = x_offset - (right_size * (self.square_size + self.square_spacing + self.split_spacing))/2
+        right_offset = x_offset + (left_size * (self.square_size + self.square_spacing + self.split_spacing))/2
+
+        # Draw arrows
+        start_point = curr_group.get_center() + DOWN * 0.2
+        left_end = [left_offset, 2.5 - (level + 1) * self.level_spacing + 0.2, 0]
+        right_end = [right_offset, 2.5 - (level + 1) * self.level_spacing + 0.2, 0]
+
+        left_arrow = Arrow(start_point, left_end, color=GRAY, buff=0.3)
+        right_arrow = Arrow(start_point, right_end, color=GRAY, buff=0.3)
+
+        self.play(FadeIn(left_arrow), FadeIn(right_arrow))
+
+        # Recursive splits
+        self.split_phase(arr, left, mid, level + 1, left_offset)
+        self.split_phase(arr, mid + 1, right, level + 1, right_offset)
+
+    def merge_phase(self):
+        for level in range(3, -1, -1):
+            level_groups = self.levels[level]
+
+            for group, left, right in level_groups:
+                if left == right:  # Skip leaf nodes
                     continue
-                self.play(dArray[j].square.animate(run_time=0.3).set_fill(BLUE, opacity=0))
-            dArray[i].value, dArray[min_id].value = dArray[min_id].value, dArray[i].value
-            if min_id != i:
-                auxMin = gArray[min_id].copy()
-                auxI = gArray[i].copy()
-                self.play(AnimationGroup(Transform(gArray[i],auxMin.match_x(gArray[i]), run_time=0.3),
-                                         Transform(gArray[min_id],auxI.match_x(gArray[min_id]), run_time=0.3)))
-                self.play(AnimationGroup(dArray[i].square.animate(run_time=0.3).set_fill(GREEN, opacity=0),
-                                             dArray[min_id].square.animate(run_time=0.3).set_fill(GREEN, opacity=0)))
-            else:
-                self.play(dArray[i].square.animate(run_time=0.3).set_fill(GREEN, opacity=0))
 
-        self.wait(1)
-        self.play(Unwrite(gArray, lag_ratio=0.1, reverse=False))
+                mid = (left + right) // 2
+                left_arr = self.array[left:mid + 1]
+                right_arr = self.array[mid + 1:right + 1]
 
-class SortWithDuplicates(Scene):
-    def construct(self):
-        # initialize the array
-        data = [1,3,3,2,5]
+                # Create positions for the merged array
+                merged = []
+                merged_group = VGroup()
+                y_pos = 2.5 - level * self.level_spacing
+                x_center = group.get_center()[0]
 
-        # transform the array into ArrayItems
-        dArray = []
-        for el in data:
-            dArray.append(ArrayItem(el))
+                # Calculate total width for positioning
+                total_width = (right - left + 1) * (self.square_size + self.square_spacing)
+                start_x = x_center - total_width/2 + self.square_size/2
 
-        # create the VGroup for Manim rendering
-        gArray = VGroup()
-        # add the squares
-        for el in dArray:
-            gArray.add(VGroup().add_to_back(el.square).add(el.text))
-        # arrange them
-        gArray.arrange(buff=0)
-        # add the texts
-        #for el in range(len(dArray)):
-            #gArray.add(dArray[el].text.align_to(dArray[el].square))
-
-        self.play(Write(gArray, lag_ratio=0.1))
-        self.wait(1)
-
-        # sort
-        for i in range(len(dArray)-1):
-            self.play(dArray[i].square.animate(run_time=0.3).set_fill(GREEN, opacity=0.3))
-            min_id = i
-            for j in range(i+1,len(dArray)):
-                self.play(dArray[j].square.animate(run_time=0.3).set_fill(BLUE, opacity=0.3))
-                if dArray[j].value < dArray[min_id].value:
-                    if min_id != i:
-                        self.play(AnimationGroup(dArray[j].square.animate(run_time=0.3).set_fill(GREEN, opacity=0.3),
-                                             dArray[min_id].square.animate(run_time=0.3).set_fill(GREEN, opacity=0)))
+                # Merge process
+                i = j = merged_idx = 0
+                while i < len(left_arr) and j < len(right_arr):
+                    if left_arr[i] <= right_arr[j]:
+                        number = left_arr[i]
+                        i += 1
                     else:
-                        self.play(dArray[j].square.animate(run_time=0.3).set_fill(GREEN, opacity=0.3))
-                    min_id = j
-                    continue
-                self.play(dArray[j].square.animate(run_time=0.3).set_fill(BLUE, opacity=0))
-            dArray[i].value, dArray[min_id].value = dArray[min_id].value, dArray[i].value
-            if min_id != i:
-                auxMin = gArray[min_id].copy()
-                auxI = gArray[i].copy()
-                self.play(AnimationGroup(Transform(gArray[i],auxMin.match_x(gArray[i]), run_time=0.3),
-                                         Transform(gArray[min_id],auxI.match_x(gArray[min_id]), run_time=0.3)))
-                self.play(AnimationGroup(dArray[i].square.animate(run_time=0.3).set_fill(GREEN, opacity=0),
-                                             dArray[min_id].square.animate(run_time=0.3).set_fill(GREEN, opacity=0)))
-            else:
-                self.play(dArray[i].square.animate(run_time=0.3).set_fill(GREEN, opacity=0))
+                        number = right_arr[j]
+                        j += 1
 
-        self.wait(1)
-        self.play(Unwrite(gArray, lag_ratio=0.1, reverse=False))
+                    x_pos = start_x + merged_idx * (self.square_size + self.square_spacing)
+                    position = [x_pos, y_pos, 0]
 
-class DrawCode(Scene):
-    def construct(self):
-        listing = Code(
-            "code/selection_sort.py",
-            tab_width=4,
-            background_stroke_width=1,
-            background_stroke_color=WHITE,
-            insert_line_no=False,
-            style="github-dark",
-            background="window",
-            language="py",
-            font_size=24,
-        )
+                    # Create highlighted square+number and then normal version
+                    highlighted = self.create_square_number(number, position, highlighted=True)
+                    normal = self.create_square_number(number, position, highlighted=False)
 
-        self.play(Write(listing))
-        self.wait(1)
+                    if merged_idx == 0:
+                        self.play(FadeOut(group))
+
+                    self.play(
+                        FadeIn(highlighted),
+                        run_time=0.5
+                    )
+                    self.play(
+                        ReplacementTransform(highlighted, normal),
+                        run_time=0.5
+                    )
+
+                    merged_group.add(normal)
+                    merged.append(number)
+                    merged_idx += 1
+
+                # Handle remaining elements
+                remaining_arr = left_arr[i:] + right_arr[j:]
+                for number in remaining_arr:
+                    x_pos = start_x + merged_idx * (self.square_size + self.square_spacing)
+                    position = [x_pos, y_pos, 0]
+
+                    highlighted = self.create_square_number(number, position, highlighted=True)
+                    self.play(FadeIn(highlighted), run_time=0.5)
+                    merged_group.add(highlighted)
+                    merged.append(number)
+                    merged_idx += 1
+                # Update the array
+                for i, val in enumerate(merged):
+                    self.array[left + i] = val
+
+# class MergeSortVisualization(Scene):
+#     def construct(self):
+#         ms_scene = MergeSortScene()
+#         ms_scene.construct()
+
+# if __name__ == "__main__":
+#     config.frame_width = 16
+#     config.frame_height = 9
+#     config.pixel_width = 1920
+#     config.pixel_height = 1080
+#     with tempconfig({"quality": "production_quality"}):
+#         scene = MergeSortVisualization()
+#         scene.render()
+
+# python visual.py -ql
