@@ -149,11 +149,11 @@ class MergeSortAnimation(Scene):
         rectangles = VGroup()
         for i, num in enumerate(unsorted_array):
             rect = Rectangle(width=0.8, height=1).shift(RIGHT * (i - len(unsorted_array) / 2) * 1.5)
-            label = Tex(str(num)).move_to(rect.get_center())
+            label = Text(str(num)).move_to(rect.get_center())
             rectangles.add(VGroup(rect, label))
 
         # Add "Unsorted Array" label
-        unsorted_label = Tex("Unsorted Array").to_edge(UP)
+        unsorted_label = Text("Unsorted Array").to_edge(UP)
         self.play(FadeIn(rectangles), Write(unsorted_label))
         self.wait(1)
 
@@ -208,7 +208,7 @@ class MergeSortAnimation(Scene):
             )
             for i, num in enumerate(merged_array):
                 rect = Rectangle(width=0.8, height=1).shift(target_position + RIGHT * i * 1.5)
-                label = Tex(str(num)).move_to(rect.get_center())
+                label = Text(str(num)).move_to(rect.get_center())
                 self.play(FadeIn(VGroup(rect, label)))
                 self.wait(0.5)
 
@@ -225,7 +225,7 @@ class MergeSortAnimation(Scene):
         final_rectangles = VGroup()
         for i, num in enumerate(sorted_array):
             rect = Rectangle(width=0.8, height=1).shift(RIGHT * (i - len(sorted_array) / 2) * 1.5)
-            label = Tex(str(num)).move_to(rect.get_center())
+            label = Text(str(num)).move_to(rect.get_center())
             final_rectangles.add(VGroup(rect, label))
 
         self.play(
@@ -236,6 +236,6 @@ class MergeSortAnimation(Scene):
         self.wait(1)
 
         # Step 4: Display Final Array
-        final_label = Tex("Sorted Array").to_edge(UP)
+        final_label = Text("Sorted Array").to_edge(UP)
         self.play(Transform(unsorted_label, final_label))
         self.wait(2)
