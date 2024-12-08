@@ -1,0 +1,2 @@
+# This file is used internally by FFMPEG.
+file 'file:/Users/theol/Documents/visualCS/media/videos/test_animation/1080p60/partial_movie_files/MyScene/3977891868_3673114463_2175705902.mp4'
