@@ -1,5 +1,4 @@
 # Prompt
-Create a Merge Sort Visualization using Manim
 Create an educational animation of the Merge Sort algorithm using the Manim Python library. The visualization should demonstrate both the recursive division and merging processes through a simple, clear visual representation.
 Initial Setup
 
@@ -11,7 +10,6 @@ Fixed-size squares (1.0 units)
 Number centered inside square
 Initial color: WHITE with slight transparency
 Small spacing between squares (0.2 units)
-
 
 
 Visual Layout Requirements
@@ -40,8 +38,6 @@ Add dotted lines connecting parent to child arrays
 Duration: ~1 second per split
 
 
-
-
 Merging Phase
 For each merge comparison:
 
@@ -56,7 +52,6 @@ Final Steps
 Color final sorted array green
 Display "Array Sorted!" text
 Hold final state for 2 seconds
-
 
 
 Technical Notes

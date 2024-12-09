@@ -4,7 +4,8 @@
 Create an educational video about the Merge Sort algorithm.
 
 ## OUTPUT
- from manim import *
+```python
+from manim import *
 
 class RecursionExample(Scene):
     def construct(self):
@@ -33,11 +34,13 @@ class RecursionExample(Scene):
         self.wait(1)
         self.play(Write(final_answer))
         self.wait(2)
-
+```
 # EXAMPLE 2
 ## INPUT
 Create an educational video about the Merge Sort algorithm. Lets think this through step by step
 
 ## OUTPUT
+```python
         self.wait(1)
         self.play(FadeIn(array, shift=UP), run_time=1)
+```
