@@ -1,18 +1,39 @@
-**UCLA COMM 188C Final Project | VisualCS: Fine-tuning Language Models for Computer Science Concept Visualization Using ManimCE**
+# VisualCS
 
-Alammar, J., & Grootendorst, M. (2024). Hands-on Large Language Models. O'Reilly Media.
+**Fine-tuning Language Models for Computer Science Concept Visualization Using ManimCE**
 
-Grant, S. [3Blue1Brown]. (2022, October). What makes a great math explanation? | SoME2 results [Video]. YouTube. Retrieved from https://www.youtube.com/watch?v=cDofhN-RJqg
+This repository contains the implementation and experimental results of VisualCS, a fine-tuned GPT-4o-mini model that generates ManimCE code to create animations of computer science concepts.
 
-Lee, T., Yasunaga, M., Meng, C., Mai, Y., Park, J. S., Gupta, A., Zhang, Y., Narayanan, D., Teufel, H. B., Bellagente, M., Kang, M., Park, T., Leskovec, J., Zhu, J. Y., Fei-Fei, L., Wu, J., Ermon, S., & Liang, P. (2023). Holistic evaluation of text-to-image models. arXiv. https://arxiv.org/pdf/2311.04287
+## Project Structure
 
-Hugging Face. (2024). Datasets documentation. Retrieved from https://huggingface.co/docs/datasets/index
+The project contains three main experimental versions:
 
-Kojima, T., Gu, S. S., Reid, M., Matsuo, Y., & Iwasawa, Y. (2023). Large language models are zero-shot reasoners. arXiv. https://arxiv.org/pdf/2205.11916
+### Base Model (Zero-Shot Prompting)
+- Documentation: `gpt-4o-mini-base/basic_prompting.md`
+- Generated Animation: `gpt-4o-mini-base/media/videos/manim_basic_prompting/1080p60/MergeSortVisualization.mp4`
 
-OpenAI. (2024, July 18). GPT-4o-mini: Advancing cost-efficient intelligence. Retrieved from https://openai.com/index/
-gpt-4o-mini-advancing-cost-efficient-intelligence/
+### Fine-Tuned Model v1 (Minimal Training)
+- Documentation: `gpt-4o-mini-ft-v1/fine_tune_v1.md`
+- Generated Animation: `gpt-4o-mini-ft-v1/media/videos/manim_fine_tuning/1080p60/MergeSortExample.mp4`
 
-OpenAI. (2024). Fine-tuning guide. Retrieved from https://platform.openai.com/docs/guides/fine-tuning/
+### Fine-Tuned Model v2 (Extended Training)
+- Documentation: `gpt-4o-mini-ft-v2/fine_tune_v2.md`
+- Note: No animation available for v2 due to unsuccessful generation
 
-The Manim Community Developers. (2024). Manim – Mathematical Animation Framework (Version v0.18.1) [Computer software]. https://www.manim.community/
+## Training Data
+
+Training data for each version can be found in:
+```
+/trainingData/v0/  - Base validation data
+/trainingData/v1/  - Version 1 training data
+/trainingData/v2/  - Version 2 training data
+```
+
+## Getting Started
+
+For detailed information about each version:
+1. Review the corresponding markdown file for implementation details and results
+2. Check the media folder for generated animations (base and v1 versions)
+3. Examine the training data in the respective version folders
+
+For a comprehensive understanding of the project, please refer to the paper.
