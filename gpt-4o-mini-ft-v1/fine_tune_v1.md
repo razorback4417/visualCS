@@ -1,69 +1,68 @@
 # Prompt
+> **NOTE:** Prompt is styled (e.g. italicized and bolded) for legibility purposes. Prompt was given to model in "raw" unstyled form.
+
 Create an educational animation of the Merge Sort algorithm using the Manim Python library. The visualization should demonstrate both the recursive division and merging processes through a simple, clear visual representation.
-Initial Setup
+
+**Initial Setup**
 
 Create a class inheriting from Scene named MergeSortVisualization
 Initialize an unsorted array of 8 integers (e.g., [7, 3, 1, 8, 4, 2, 6, 5])
 Represent each number in a square:
 
-Fixed-size squares (1.0 units)
-Number centered inside square
-Initial color: WHITE with slight transparency
-Small spacing between squares (0.2 units)
+* Fixed-size squares (1.0 units)
+* Number centered inside square
+* Initial color: WHITE with slight transparency
+* Small spacing between squares (0.2 units)
 
-
-Visual Layout Requirements
+**Visual Layout Requirements**
 
 Position initial array centered at y=2
 Maintain consistent spacing between squares
 Reserve vertical space below (y < 2) for recursive divisions
 Keep all elements within camera frame (-7 ≤ x ≤ 7, -4 ≤ y ≤ 4)
 
-Animation Sequence
+**Animation Sequence**
 
-Array Initialization (2-3 seconds)
+*Array Initialization (2-3 seconds)*
 
-Fade in squares with numbers
-Add title "Merge Sort Visualization" at top
-Brief pause to show initial state
+* Fade in squares with numbers
+* Add title "Merge Sort Visualization" at top
+* Brief pause to show initial state
 
-
-Division Phase
+*Division Phase*
 
 Create clear splitting animations:
 
-Move subarrays down by 1.5 units
-Shift left/right subgroups horizontally
-Add dotted lines connecting parent to child arrays
-Duration: ~1 second per split
+* Move subarrays down by 1.5 units
+* Shift left/right subgroups horizontally
+* Add dotted lines connecting parent to child arrays
+* Duration: ~1 second per split
 
-
-Merging Phase
+*Merging Phase*
 For each merge comparison:
 
-Highlight comparing squares in blue
-Move smaller number up first
-Return color to white after comparison
-Remove original squares after merging
+* Highlight comparing squares in blue
+* Move smaller number up first
+* Return color to white after comparison
+* Remove original squares after merging
 
+*Final Steps*
 
-Final Steps
+* Color final sorted array green
+* Display "Array Sorted!" text
+* Hold final state for 2 seconds
 
-Color final sorted array green
-Display "Array Sorted!" text
-Hold final state for 2 seconds
+**Technical Notes**
 
-
-Technical Notes
-
-Use consistent animation timings (0.5-1.0 seconds per action)
-Add appropriate pauses between steps
-Group square and number as single mobject
-Track and update positions carefully during merges
-Importantly, make sure no objects get in the way of each other, and that all objects are visible in the screen
+* Use consistent animation timings (0.5-1.0 seconds per action)
+* Add appropriate pauses between steps
+* Group square and number as single mobject
+* Track and update positions carefully during merges
+* Importantly, make sure no objects get in the way of each other, and that all objects are visible in the screen
 
 # Output
-\n from manim import *
+```python
+from manim import *
 
 class MergeSortExample(Scene):
     def construct(self):
@@ -110,3 +109,4 @@ class MergeSortExample(Scene):
             Write(final_result)
         )
         self.wait(2)
+```
