@@ -61,6 +61,7 @@ For each merge comparison:
 * Importantly, make sure no objects get in the way of each other, and that all objects are visible in the screen
 
 # Output
+> Scored 3/5 on Likert Scale
 ```python
 from manim import *
 

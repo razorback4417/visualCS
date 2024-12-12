@@ -62,6 +62,7 @@ For each merge comparison:
 
 
 # Output
+> Scored 2/5 on Likert Scale
 Sure! Below is an implementation of a Merge Sort visualization using the Manim library. This code includes the required animations for the initialization, division, and merging phases, keeping in mind the layout and visual requirements you specified.
 
 Make sure you have Manim installed and set up before running this code.
