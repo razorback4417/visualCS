@@ -2,11 +2,11 @@
 
 **Fine-tuning Language Models for Computer Science Concept Visualization Using Manim**
 
-This repository contains the implementation and experimental results of VisualCS, a fine-tuned GPT-4o-mini model that generates [ManimCE](https://github.com/ManimCommunity/manim) code to create animations of computer science concepts.
+This repository contains the implementation and experimental results of VisualCS, a fine-tuned GPT-4o-mini model that generates [Manim](https://github.com/ManimCommunity/manim) code to create visual explanations of computer science concepts.
 
 ## Project Structure
 
-The project contains three main experimental versions:
+The project contains three experimental versions:
 
 ### Base Model (Zero-Shot Prompting)
 - Documentation: [`gpt-4o-mini-base/basic_prompting.md`](https://github.com/razorback4417/visualCS/blob/main/gpt-4o-mini-base/basic_prompting.md)
